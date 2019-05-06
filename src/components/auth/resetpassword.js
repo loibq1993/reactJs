@@ -1,4 +1,4 @@
-import React from 'react';
+import {React} from '../../import.js'
 
 class ResetPassword extends React.Component {
     render() {

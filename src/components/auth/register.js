@@ -1,5 +1,4 @@
-import React from 'react';
-import * as bs from "react-bootstrap";
+import { React, bs} from '../../import.js'
 
 class Register extends React.Component {
     render() {

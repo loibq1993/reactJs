@@ -1,7 +1,4 @@
-import React from 'react';
-import * as bs from 'react-bootstrap';
-import ResetPassword from '../../src/components/register.js';
-import { Link,Route } from 'react-router-dom';
+import {React, bs} from '../../import.js'
 
 class Login extends React.Component {
     render() {
@@ -27,8 +24,8 @@ class Login extends React.Component {
                                         </bs.FormGroup>
                                         <bs.FormGroup className="row justify-content-center">
                                             <bs.Button className="btn btn-primary">Submit</bs.Button>
-                                            <Link to="/reset-password" className="btn btn-link">Reset password</Link>
-                                            <Route exact path="/reset-password" component={ResetPassword} />
+                                            <bs.Nav.Link to="/reset-password" className="btn btn-link">Reset password</bs.Nav.Link>
+                                            {/*<rt.Route exact path="/reset-password" component={ResetPassword} />*/}
                                         </bs.FormGroup>
                                     </bs.Form>
                                 </div>

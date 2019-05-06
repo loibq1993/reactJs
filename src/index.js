@@ -1,9 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import {React} from './import.js'
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+// import {createStore} from 'redux';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
