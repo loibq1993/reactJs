@@ -1,13 +1,13 @@
 import './App.css';
-import {React, bs, rt} from '../import.js';
-import Login from './auth/login.js'
-import Register from './auth/register.js'
-import ResetPassword from "./auth/resetpassword.js";
-import IndexProduct from './product/index.js';
-import CreateProduct from './product/create.js';
-import EditProduct from './product/edit.js';
-import ViewProduct from './product/view.js';
-import DeleteProduct from './product/delete.js';
+import {React, bs, rt} from '../import';
+import Login from '../components/auth/login.js'
+import Register from '../components/auth/register.js'
+import ResetPassword from "../components/auth/resetpassword.js";
+import IndexProduct from '../components/product/index.js';
+import CreateProduct from '../components/product/create.js';
+import EditProduct from '../components/product/edit.js';
+import ViewProduct from '../components/product/view.js';
+import DeleteProduct from '../components/product/delete.js';
 
 class App extends React.Component {
     render() {

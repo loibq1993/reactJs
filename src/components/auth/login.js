@@ -1,4 +1,4 @@
-import {React, bs} from '../../import.js'
+import {React, bs} from '../../import'
 
 class Login extends React.Component {
     render() {

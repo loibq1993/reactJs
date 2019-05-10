@@ -1,4 +1,8 @@
-import {axios, React, rt, bs, FontAwesomeIcon} from '../../import.js'
+import { React, rt, bs, FontAwesomeIcon} from '../../import'
+import * as action from "../../actions/action.js";
+import {connect} from 'react-redux';
+import callApi from '../../callApi'
+
 const baseUrl = 'http://laravel.cc';
 
 class IndexProduct extends React.Component {
@@ -7,19 +11,18 @@ class IndexProduct extends React.Component {
         this.state = {
             products:[]
         };
+
     }
     componentDidMount() {
-        axios.get(baseUrl + '/product')
-            .then(response => {
-                const products = response.data;
-            this.setState({ products });
-                console.log(products);
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
+       callApi('product','GET',null)
+           .then( (res) => {
+               this.setState({products :res.data})
+               this.props.fetchAllProducts(res.data);
+           })
+
     }
     render() {
+        // var {products} = this.props;
         return (
             <main className="py-4">
                 <div className="container">
@@ -40,23 +43,23 @@ class IndexProduct extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.products.map(function(product,index){
-                                        return (
-                                            <tr key={index}>
-                                                <td>{index+1}</td>
-                                                <td>{product.name}</td>
-                                                <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
-                                                <td>{product.description}</td>
-                                                <td>{product.quantity}</td>
-                                                <td>
-                                                    <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
-                                                    <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
-                                                    <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
-                                                </td>
-                                            </tr>
-                                        )
-                                    }
-                                )}
+                            {this.state.products.map(function(product,index){
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index+1}</td>
+                                            <td>{product.name}</td>
+                                            <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
+                                            <td>{product.description}</td>
+                                            <td>{product.quantity}</td>
+                                            <td>
+                                                <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
+                                                <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
+                                                <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
+                                            </td>
+                                        </tr>
+                                    )
+                                }
+                            )}
                             </tbody>
                         </bs.Table>
                     </div>
@@ -64,6 +67,40 @@ class IndexProduct extends React.Component {
             </main>
         )
     }
+
+    showProducts(products){
+        // if(products.length > 0){
+        //     products.map((product,index) => {
+        //         return (
+        //             <tr key={index}>
+        //                 <td>{index+1}</td>
+        //                 <td>{product.name}</td>
+        //                 <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
+        //                 <td>{product.description}</td>
+        //                 <td>{product.quantity}</td>
+        //                 <td>
+        //                     <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
+        //                     <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
+        //                     <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
+        //                 </td>
+        //             </tr>
+        //         )
+        //     })
+        // }
+    }
 }
 
-export default IndexProduct;
+const mapStateToProps = state => {
+    return {
+        products :state.products
+    }
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchAllProducts : (products) => {
+            dispatch(action.actFetchData(products));
+        },
+    }
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(IndexProduct)
