@@ -16,13 +16,56 @@ class IndexProduct extends React.Component {
     componentDidMount() {
        callApi('product','GET',null)
            .then( (res) => {
-               this.setState({products :res.data})
-               this.props.fetchAllProducts(res.data);
+               this.setState({products :res.data});
+               // this.props.fetchAllProducts(res.data);
            })
 
     }
-    render() {
+
+    showProducts(){
         // var {products} = this.props;
+        // console.log(products);
+        let listProducts = this.state.products.map(
+            (product,index) => {
+                return (
+                    <tr key={index}>
+                        <td>{index+1}</td>
+                        <td>{product.name}</td>
+                        <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
+                        <td>{product.description}</td>
+                        <td>{product.quantity}</td>
+                        <td>
+                            <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
+                            <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
+                            <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
+                        </td>
+                    </tr>
+                )
+            }
+        )
+        return listProducts;
+
+        // if(products.length > 0){
+        //     products.map((product,index) => {
+        //         return (
+        //             <tr key={index}>
+        //                 <td>{index+1}</td>
+        //                 <td>{product.name}</td>
+        //                 <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
+        //                 <td>{product.description}</td>
+        //                 <td>{product.quantity}</td>
+        //                 <td>
+        //                     <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
+        //                     <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
+        //                     <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
+        //                 </td>
+        //             </tr>
+        //         )
+        //     })
+        // }
+    }
+
+    render() {
         return (
             <main className="py-4">
                 <div className="container">
@@ -43,23 +86,24 @@ class IndexProduct extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                            {this.state.products.map(function(product,index){
-                                    return (
-                                        <tr key={index}>
-                                            <td>{index+1}</td>
-                                            <td>{product.name}</td>
-                                            <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
-                                            <td>{product.description}</td>
-                                            <td>{product.quantity}</td>
-                                            <td>
-                                                <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
-                                                <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
-                                                <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
-                                            </td>
-                                        </tr>
-                                    )
-                                }
-                            )}
+                            {this.showProducts()}
+                            {/*{this.state.products.map(function(product,index){*/}
+                            {/*        return (*/}
+                            {/*            <tr key={index}>*/}
+                            {/*                <td>{index+1}</td>*/}
+                            {/*                <td>{product.name}</td>*/}
+                            {/*                <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>*/}
+                            {/*                <td>{product.description}</td>*/}
+                            {/*                <td>{product.quantity}</td>*/}
+                            {/*                <td>*/}
+                            {/*                    <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>*/}
+                            {/*                    <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>*/}
+                            {/*                    <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>*/}
+                            {/*                </td>*/}
+                            {/*            </tr>*/}
+                            {/*        )*/}
+                            {/*    }*/}
+                            {/*)}*/}
                             </tbody>
                         </bs.Table>
                     </div>
@@ -68,26 +112,6 @@ class IndexProduct extends React.Component {
         )
     }
 
-    showProducts(products){
-        // if(products.length > 0){
-        //     products.map((product,index) => {
-        //         return (
-        //             <tr key={index}>
-        //                 <td>{index+1}</td>
-        //                 <td>{product.name}</td>
-        //                 <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
-        //                 <td>{product.description}</td>
-        //                 <td>{product.quantity}</td>
-        //                 <td>
-        //                     <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
-        //                     <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
-        //                     <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
-        //                 </td>
-        //             </tr>
-        //         )
-        //     })
-        // }
-    }
 }
 
 const mapStateToProps = state => {
