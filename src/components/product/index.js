@@ -16,13 +16,12 @@ class IndexProduct extends React.Component {
     componentDidMount() {
        callApi('product','GET',null)
            .then( (res) => {
-               this.setState({products :res.data})
+               // this.setState({products :res.data});
                this.props.fetchAllProducts(res.data);
            })
 
     }
     render() {
-        // var {products} = this.props;
         return (
             <main className="py-4">
                 <div className="container">
@@ -43,7 +42,7 @@ class IndexProduct extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                            {this.state.products.map(function(product,index){
+                            {this.props.products.map(function(product,index){
                                     return (
                                         <tr key={index}>
                                             <td>{index+1}</td>

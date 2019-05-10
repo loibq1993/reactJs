@@ -1,7 +1,7 @@
 import * as type from "../actions/actionType";
+import {combineReducers} from 'redux';
 
-
-const   products = (state = [], action) => {
+const   productsReducer = (state = [], action) => {
     switch (action.type) {
         // case ADD_POST:
         //     return [...state, action.payload];
@@ -12,5 +12,8 @@ const   products = (state = [], action) => {
         default:
             return state;
     }
-}
- export default products;
+};
+
+ export default combineReducers({
+     products : productsReducer,
+ });

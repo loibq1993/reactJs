@@ -4,12 +4,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './container/App';
 import * as serviceWorker from './serviceWorker';
-import Product from './reducers';
+import product from './reducers';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 
 
-const store = createStore(Product);
+const store = createStore(product);
 
 
 ReactDOM.render(
