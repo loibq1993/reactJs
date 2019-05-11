@@ -67,7 +67,7 @@ class CreateProduct extends React.Component {
                                             />
                                         </bs.Form.Group>
                                         <bs.Form.Group>
-                                            <bs.FormControl type="submit" />
+                                            <bs.Button type="submit">Submit</bs.Button>
                                         </bs.Form.Group>
                                     </bs.Form>
                                 </div>
