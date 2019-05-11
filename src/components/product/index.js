@@ -13,14 +13,15 @@ class IndexProduct extends React.Component {
         };
 
     }
+
     componentDidMount() {
        callApi('product','GET',null)
            .then( (res) => {
                // this.setState({products :res.data});
                this.props.fetchAllProducts(res.data);
            })
-
     }
+
     render() {
         return (
             <main className="py-4">
