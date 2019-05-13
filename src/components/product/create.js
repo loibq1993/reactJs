@@ -31,7 +31,7 @@ class CreateProduct extends React.Component {
         switch (name) {
             case 'name':
                 errors.name =
-                    value.length < 5
+                    value.length < 0
                         ? 'Tên sản phẩm không được để trống'
                         : '';
                 break;
@@ -39,7 +39,7 @@ class CreateProduct extends React.Component {
                 //e.target.files[0].name
                 errors.image =
                     !validImageTypes.includes(fileType)
-                        ? 'Ảnh không đúng định dạng'
+                        ? 'Ảnh phải là định dạng jpeg, png, jpg, gif, svg'
                         : '';
                 break;
             default:
@@ -56,15 +56,26 @@ class CreateProduct extends React.Component {
         var formData = new FormData();
         formData.append('name',this.state.name);
         formData.append('description',this.state.description);
-        formData.append('quantity',this.state.quantity);
-        formData.append('image',this.state.image);
-        // let {name, image, description, quantity} = this.state;
+        if(this.state.quantity!== ""){
+            formData.append('quantity',this.state.quantity);
+        }else{
+            formData.append('quantity',"0");
+        }
+        if(e.target.image.files.length > 0){
+            formData.append('photo',e.target.image.files[0]);
+        }
         callApi('product','POST',formData)
             .then( (res) => {
-                // console.log(res);
+                this.props.history.push('/')
             })
-            .catch( (res) => {
-                // console.log(res);
+            .catch( (errs) => {
+                let json = errs.response.data.error;
+                this.setState({
+                    errors: {
+                        name : json.name,
+                        image : json.photo
+                    }
+                });
             })
     }
 
@@ -78,7 +89,7 @@ class CreateProduct extends React.Component {
                             <div className="card">
                                 <div className="card-header">Create new product</div>
                                 <div className="card-body">
-                                    <bs.Form id="form-create" onSubmit={this.handleSubmit}>
+                                    <bs.Form id="form-create"  encType="multipart/form-data" onSubmit={this.handleSubmit}>
                                         <bs.Form.Group>
                                             <bs.FormLabel>Product Name</bs.FormLabel>
                                             <bs.FormControl
@@ -88,8 +99,7 @@ class CreateProduct extends React.Component {
                                                 value={this.state.value}
                                                 onChange={this.handleChange}
                                             />
-                                            {errors.name.length > 0 &&
-                                            <span className='error'>{errors.name}</span>}
+                                            {<span className='error'>{errors.name}</span>}
                                         </bs.Form.Group>
                                         <bs.Form.Group>
                                             <bs.FormLabel>Product image</bs.FormLabel>
@@ -99,8 +109,7 @@ class CreateProduct extends React.Component {
                                                 value={this.state.value}
                                                 onChange={this.handleChange}
                                             />
-                                            {
-                                            <span className='error'>{errors.image}</span>}
+                                            {<span className='error'>{errors.image}</span>}
                                         </bs.Form.Group>
                                         <bs.Form.Group>
                                             <bs.FormLabel>Product Name</bs.FormLabel>
@@ -120,6 +129,7 @@ class CreateProduct extends React.Component {
                                                 placeholder="Product quantity"
                                                 value={this.state.value}
                                                 onChange={this.handleChange}
+                                                defaultValue="0"
                                             />
                                         </bs.Form.Group>
                                         <bs.Form.Group>

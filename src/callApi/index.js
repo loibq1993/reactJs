@@ -1,5 +1,5 @@
 import {axios} from '../import';
-const url = 'http://laravel.cc';
+const url = 'http://laravel.cc/api';
 
 
 export default function callApi(endpoint, method, body = null) {
@@ -8,12 +8,9 @@ export default function callApi(endpoint, method, body = null) {
         timeout: 20000,
         method: method,
         data: body,
+        responseType: 'json',
         headers: {
-            'accept': 'application/json',
-            'Accept-Language': 'en-US,en;q=0.8',
             'Content-Type': 'multipart/form-data',
-        }
-    }).catch( (error) => {
-        console.log(error);
+        },
     })
 }
