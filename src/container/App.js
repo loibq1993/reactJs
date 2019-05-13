@@ -28,8 +28,8 @@ class App extends React.Component {
                         <rt.Route path="/reset-password" component={ResetPassword} />
                         <rt.Route exact path="/" component={IndexProduct} />
                         <rt.Route path="/product/create" component={CreateProduct} />
-                        <rt.Route path="/product/edit/:id" component={EditProduct} />
-                        <rt.Route path="/product/:id" component={ViewProduct} />
+                        <rt.Route path="/product/:id/edit" component={EditProduct} />
+                        <rt.Route path="/product/:id" component={ViewProduct} main/>
                     </rt.Switch>
                 </div>
             </rt.BrowserRouter>

@@ -14,12 +14,19 @@ class IndexProduct extends React.Component {
     }
 
     componentDidMount() {
-       callApi('product','GET',null)
+        callApi('product','GET',null)
            .then( (res) => {
                // this.setState({products :res.data});
                this.props.fetchAllProducts(res.data);
            })
     }
+
+    handleEdit = (id) => {
+        callApi(`product/`+id,'get',null)
+            .then( (res) => {
+                this.props.history.push('/product/'+id+'/edit');
+            })
+    };
 
     handleDelete = (id) => {
         var {products} = this.props;
@@ -82,9 +89,12 @@ class IndexProduct extends React.Component {
                                             <td>{product.quantity}</td>
                                             <td>
                                                 <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
-                                                <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>
-                                                    Sửa
-                                                </rt.Link>
+                                                <bs.Button
+                                                    onClick={_this.handleEdit.bind(this, product.id)} //error while using this. have to change to _this
+                                                    className="btn btn-warning"
+                                                >
+                                                    Edit
+                                                </bs.Button>
                                                 <bs.Button
                                                     onClick={_this.handleDelete.bind(this, product.id)} //error while using this. have to change to _this
                                                     className="btn btn-danger"

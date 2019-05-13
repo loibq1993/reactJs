@@ -31,7 +31,7 @@ class CreateProduct extends React.Component {
         switch (name) {
             case 'name':
                 errors.name =
-                    value.length < 0
+                    value.length <= 0
                         ? 'Tên sản phẩm không được để trống'
                         : '';
                 break;
