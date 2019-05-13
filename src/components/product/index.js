@@ -11,7 +11,6 @@ class IndexProduct extends React.Component {
         this.state = {
             products:[]
         };
-
     }
 
     componentDidMount() {
@@ -22,7 +21,37 @@ class IndexProduct extends React.Component {
            })
     }
 
+    handleDelete = (id) => {
+        var {products} = this.props;
+        if(confirm('Are you sure?')){//eslint-disable-line
+            callApi(`product/`+id,'DELETE',null)
+                .then( (res) => {
+                    if(res.status === 200){
+                        var index = this.findIndex(products, id);
+                        if(index !== -1){
+                            products.splice(index, 1);
+                            this.setState({
+                                products : products
+                            })
+                        }
+                    }
+                })
+        }
+    };
+
+    findIndex = (products, id) => {
+        var result = -1;
+        products.forEach((product, index) => {
+            if(product.id === id){
+                result = index;
+            }
+        });
+        return result;
+    };
+
     render() {
+        let products = this.props.products;
+        var _this = this;
         return (
             <main className="py-4">
                 <div className="container">
@@ -43,7 +72,7 @@ class IndexProduct extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                            {this.props.products.map(function(product,index){
+                            {products.map(function(product,index){
                                     return (
                                         <tr key={index}>
                                             <td>{index+1}</td>
@@ -53,8 +82,15 @@ class IndexProduct extends React.Component {
                                             <td>{product.quantity}</td>
                                             <td>
                                                 <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
-                                                <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
-                                                <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
+                                                <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>
+                                                    Sửa
+                                                </rt.Link>
+                                                <bs.Button
+                                                    onClick={_this.handleDelete.bind(this, product.id)} //error while using this. have to change to _this
+                                                    className="btn btn-danger"
+                                                >
+                                                    Delete
+                                                </bs.Button>
                                             </td>
                                         </tr>
                                     )
@@ -66,27 +102,6 @@ class IndexProduct extends React.Component {
                 </div>
             </main>
         )
-    }
-
-    showProducts(products){
-        // if(products.length > 0){
-        //     products.map((product,index) => {
-        //         return (
-        //             <tr key={index}>
-        //                 <td>{index+1}</td>
-        //                 <td>{product.name}</td>
-        //                 <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
-        //                 <td>{product.description}</td>
-        //                 <td>{product.quantity}</td>
-        //                 <td>
-        //                     <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
-        //                     <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
-        //                     <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
-        //                 </td>
-        //             </tr>
-        //         )
-        //     })
-        // }
     }
 }
 
