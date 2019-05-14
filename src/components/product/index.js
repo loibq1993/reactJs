@@ -14,11 +14,7 @@ class IndexProduct extends React.Component {
     }
 
     componentDidMount() {
-        callApi('product','GET',null)
-           .then( (res) => {
-               // this.setState({products :res.data});
-               this.props.fetchAllProducts(res.data);
-           })
+        this.props.fetchAllProducts();
     }
 
     handleEdit = (id) => {
@@ -120,10 +116,10 @@ const mapStateToProps = state => {
         products :state.products
     }
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, props) => {
     return {
-        fetchAllProducts : (products) => {
-            dispatch(action.actFetchData(products));
+        fetchAllProducts : () => {
+            dispatch(action.actRequestData());
         },
     }
 };

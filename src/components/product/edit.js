@@ -213,7 +213,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllProducts : (products) => {
-            dispatch(action.actFetchData(products));
+            dispatch(action.actFetchAllData(products));
         },
     }
 };

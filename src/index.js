@@ -5,11 +5,14 @@ import './index.css';
 import App from './container/App';
 import * as serviceWorker from './serviceWorker';
 import product from './reducers';
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
+import thunk from 'redux-thunk';
 
-
-const store = createStore(product);
+const store = createStore(
+    product,
+    applyMiddleware(thunk)
+);
 
 
 ReactDOM.render(
