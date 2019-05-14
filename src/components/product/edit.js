@@ -1,7 +1,6 @@
-import { React, rt, bs, FontAwesomeIcon} from '../../import'
+import { React } from '../../import'
 import * as action from "../../actions/action.js";
 import {connect} from 'react-redux';
-import callApi from '../../callApi'
 
 const baseUrl = 'http://laravel.cc';
 
@@ -26,16 +25,10 @@ class EditProduct extends React.Component {
 
     componentDidMount() {
         let {match} = this.props;
-        let id = match.params.id;
-        callApi('product/'+id+'/edit','GET',null)
-            .then( (res) => {
-                this.setState({
-                    name : res.data.name,
-                    image : res.data.photo,
-                    description : res.data.description,
-                    quantity : res.data.quantity
-                });
-            })
+        if(match){
+            let id = match.params.id;
+            this.props.fetchProduct(id);
+        }
     }
 
     handleChange(e){
@@ -43,7 +36,7 @@ class EditProduct extends React.Component {
         let reader = new FileReader();
         let errorName = "";
         let errorImg = "";
-        let previewFileName = "";
+        // let previewFileName = "";
         let file = '';
         if( e.target.files ){
             file =  e.target.files[0];
@@ -101,24 +94,24 @@ class EditProduct extends React.Component {
         formData.append('id',id);
         formData.append('_method','PATCH');
 
-        console.log(id);
-        callApi('product/'+id,'POST',formData)
-            .then( (res) => {
-                this.props.history.push('/')
-            })
-            .catch( (errs) => {
-                let json = errs.response.data.error;
-                this.setState({
-                    errors: {
-                        name : json.name,
-                        image : json.photo
-                    }
-                });
-            })
+        this.props.onEditData(formData);
+        // callApi('product/'+id,'POST',formData)
+        //     .then( (res) => {
+        //         this.props.history.push('/')
+        //     })
+        //     .catch( (errs) => {
+        //         let json = errs.response.data.error;
+        //         this.setState({
+        //             errors: {
+        //                 name : json.name,
+        //                 image : json.photo
+        //             }
+        //         });
+        //     })
     }
 
     render() {
-        let product = this.state;
+        let product = this.props.product;
         let errors = this.state.errors;
         let previewUrl = this.state.previewUrl;
         let previewFileName = this.state.previewFileName;
@@ -152,12 +145,12 @@ class EditProduct extends React.Component {
                                             <span className="col-md-6">
                                                 {previewUrl !== ''
                                                     ? <img height="100" width="100" src={previewUrl} alt={product.photo} />
-                                                    :<img height="100" width="100" src={baseUrl + '/images/' + product.image} alt={product.photo} />
+                                                    : <img height="100" width="100" src={baseUrl + '/images/' + product.photo} alt={product.photo} />
                                                 }
                                                 <p>
                                                     {previewUrl !== ''
                                                         ? previewFileName
-                                                        : product.image
+                                                        : product.photo
                                                     }
                                                 </p>
                                             </span>
@@ -207,14 +200,18 @@ class EditProduct extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        products :state.products
+        product :state.products
     }
 };
-const mapDispatchToProps = (dispatch) => {
+
+const mapDispatchToProps = (dispatch, props) => {
     return {
-        fetchAllProducts : (products) => {
-            dispatch(action.actFetchAllData(products));
+        fetchProduct : (id) => {
+            dispatch(action.actRequestEditData(id));
         },
+        onEditData : (formData) => {
+            dispatch(action.actRequestUpdateData(formData))
+        }
     }
 };
 

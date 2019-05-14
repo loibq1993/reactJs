@@ -1,18 +1,32 @@
-import * as type from "../actions/actionType";
+import * as types from "../actions/actionType";
 import {combineReducers} from 'redux';
 
-const   productsReducer = (state = [], action) => {
+const findIndex = (products, id) => {
+    var result = -1;
+    products.forEach((product, index) => {
+        if(product.id === id){
+            result = index;
+        }
+    });
+    return result;
+};
+
+const productsReducer = (state = [], action) => {
+    var index = -1;
+    var {id} = action;
     switch (action.type) {
-        case type.GET_ALL_DATA:
+        case types.GET_ALL_DATA:
             return state = action.products;
-        case type.GET_ONE_DATA:
-            return action.product;
-        case type.ADD_DATA:
-            return [...state, action.payload];
-        case type.EDIT_DATA:
-            return ;
-        case type.DELETE_DATA:
-            return ;
+        // case types.GET_ONE_DATA:
+        //     return action.product;
+        // case types.ADD_DATA:
+        //     return [...state, action.payload];
+        case types.EDIT_DATA:
+            return state = action.product;
+        case types.DELETE_DATA:
+            index = findIndex(state, id);
+            state.splice(index, 1);
+            return action.id;
         default:
             return state;
     }

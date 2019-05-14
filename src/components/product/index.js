@@ -9,8 +9,8 @@ class IndexProduct extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            products:[]
-        };
+            products : []
+        }
     }
 
     componentDidMount() {
@@ -25,31 +25,9 @@ class IndexProduct extends React.Component {
     };
 
     handleDelete = (id) => {
-        var {products} = this.props;
         if(confirm('Are you sure?')){//eslint-disable-line
-            callApi(`product/`+id,'DELETE',null)
-                .then( (res) => {
-                    if(res.status === 200){
-                        var index = this.findIndex(products, id);
-                        if(index !== -1){
-                            products.splice(index, 1);
-                            this.setState({
-                                products : products
-                            })
-                        }
-                    }
-                })
+            this.props.onDeleteData(id);
         }
-    };
-
-    findIndex = (products, id) => {
-        var result = -1;
-        products.forEach((product, index) => {
-            if(product.id === id){
-                result = index;
-            }
-        });
-        return result;
     };
 
     render() {
@@ -116,12 +94,18 @@ const mapStateToProps = state => {
         products :state.products
     }
 };
+
 const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchAllProducts : () => {
-            dispatch(action.actRequestData());
+            dispatch(action.actRequestFetchData());
         },
+        onDeleteData : (id) => {
+            dispatch(action.actRequestDeleteData(id));
+        }
     }
 };
+
+
 
 export default connect(mapStateToProps,mapDispatchToProps)(IndexProduct)
