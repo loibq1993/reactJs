@@ -1,4 +1,4 @@
-import { React } from '../../import'
+import { React,bs } from '../../import';
 import * as action from "../../actions/action.js";
 import {connect} from 'react-redux';
 
@@ -12,12 +12,12 @@ class EditProduct extends React.Component {
             image:'',
             description:'',
             quantity:'',
+            previewUrl : '',
+            previewFileName : '',
             errors: {
                 name: '',
                 image: ''
-            },
-            previewUrl : '',
-            previewFileName : ''
+            }
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,6 +28,18 @@ class EditProduct extends React.Component {
         if(match){
             let id = match.params.id;
             this.props.fetchProduct(id);
+        }
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(nextProps && nextProps.product){
+            var {product} = nextProps;
+            this.setState({
+                name: product.name,
+                image: product.photo,
+                description: product.description,
+                quantity : product.quantity
+            })
         }
     }
 
@@ -94,7 +106,8 @@ class EditProduct extends React.Component {
         formData.append('id',id);
         formData.append('_method','PATCH');
 
-        this.props.onEditData(formData);
+        this.props.onEditData(formData,id);
+        this.props.history.push('/product/'+id+'/edit');
         // callApi('product/'+id,'POST',formData)
         //     .then( (res) => {
         //         this.props.history.push('/')
@@ -111,7 +124,7 @@ class EditProduct extends React.Component {
     }
 
     render() {
-        let product = this.props.product;
+        let { name, image, description, quantity } = this.state;
         let errors = this.state.errors;
         let previewUrl = this.state.previewUrl;
         let previewFileName = this.state.previewFileName;
@@ -134,7 +147,7 @@ class EditProduct extends React.Component {
                                                 type="text"
                                                 name="name"
                                                 placeholder="Product name"
-                                                value={product.name}
+                                                value={name}
                                                 onChange={this.handleChange}
                                                 className="form-control"
                                             />
@@ -144,13 +157,13 @@ class EditProduct extends React.Component {
                                             <label className="col-md-12">Product image</label>
                                             <span className="col-md-6">
                                                 {previewUrl !== ''
-                                                    ? <img height="100" width="100" src={previewUrl} alt={product.photo} />
-                                                    : <img height="100" width="100" src={baseUrl + '/images/' + product.photo} alt={product.photo} />
+                                                    ? <img height="100" width="100" src={previewUrl} alt={image} />
+                                                    : <img height="100" width="100" src={baseUrl + '/images/' + image} alt={image} />
                                                 }
                                                 <p>
                                                     {previewUrl !== ''
                                                         ? previewFileName
-                                                        : product.photo
+                                                        : image
                                                     }
                                                 </p>
                                             </span>
@@ -170,7 +183,7 @@ class EditProduct extends React.Component {
                                                 name="description"
                                                 placeholder="Product description"
                                                 onChange={this.handleChange}
-                                                value={product.description || ''}
+                                                value={description}
                                             />
                                         </div>
                                         <div className="form-group">
@@ -179,7 +192,7 @@ class EditProduct extends React.Component {
                                                 type="number"
                                                 name="quantity"
                                                 placeholder="Product quantity"
-                                                value={product.quantity}
+                                                value={quantity}
                                                 onChange={this.handleChange}
                                                 className="form-control"
                                             />
@@ -209,8 +222,8 @@ const mapDispatchToProps = (dispatch, props) => {
         fetchProduct : (id) => {
             dispatch(action.actRequestEditData(id));
         },
-        onEditData : (formData) => {
-            dispatch(action.actRequestUpdateData(formData))
+        onEditData : (formData,id) => {
+            dispatch(action.actRequestUpdateData(formData,id))
         }
     }
 };

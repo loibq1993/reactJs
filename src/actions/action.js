@@ -29,12 +29,19 @@ export const actRequestEditData = (id) => {
     }
 };
 
-export const actRequestUpdateData = (id) => {
+export const actRequestUpdateData = (formData,id) => {
     return (dispatch) => {
-        return callApi('product/'+id+'/edit','GET',null)
+        return callApi('product/'+id,'POST',formData)
             .then((res) => {
-                dispatch(actEditData(res.data));
+                dispatch(actUpdateData(res.data));
             });
+    }
+};
+
+export const actUpdateData = (product) => {
+    return {
+        type : types.UPDATE_DATA,
+        product
     }
 };
 

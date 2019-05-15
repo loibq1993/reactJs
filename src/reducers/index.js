@@ -23,6 +23,8 @@ const productsReducer = (state = [], action) => {
         //     return [...state, action.payload];
         case types.EDIT_DATA:
             return state = action.product;
+        case types.UPDATE_DATA:
+            return state = action.product;
         case types.DELETE_DATA:
             index = findIndex(state, id);
             state.splice(index, 1);
