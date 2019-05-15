@@ -18,15 +18,13 @@ class IndexProduct extends React.Component {
     }
 
     handleEdit = (id) => {
-        callApi(`product/`+id,'get',null)
-            .then( (res) => {
-                this.props.history.push('/product/'+id+'/edit');
-            })
+        this.props.history.push('/product/'+id+'/edit');
     };
 
     handleDelete = (id) => {
         if(confirm('Are you sure?')){//eslint-disable-line
             this.props.onDeleteData(id);
+            this.props.history.push('/');
         }
     };
 

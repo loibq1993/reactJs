@@ -11,9 +11,9 @@ export const actRequestFetchData = () => {
     }
 };
 
-export const actRequestDeleteData = () => {
+export const actRequestDeleteData = (id) => {
     return (dispatch) => {
-        return callApi('product','DELETE',null)
+        return callApi('product/'+id,'DELETE',null)
             .then((res) => {
                 dispatch(actDeleteData(res.data));
             });
