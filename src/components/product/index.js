@@ -1,7 +1,6 @@
 import { React, rt, bs, FontAwesomeIcon} from '../../import'
 import * as action from "../../actions/action.js";
 import {connect} from 'react-redux';
-import callApi from '../../callApi'
 
 const baseUrl = 'http://laravel.cc';
 
@@ -56,7 +55,7 @@ class IndexProduct extends React.Component {
                                         <tr key={index}>
                                             <td>{index+1}</td>
                                             <td>{product.name}</td>
-                                            <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
+                                            <td><img width="100" height="100" src={baseUrl + '/images/' + product.image} alt={product.image}/></td>
                                             <td>{product.description}</td>
                                             <td>{product.quantity}</td>
                                             <td>

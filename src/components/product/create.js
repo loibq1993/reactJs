@@ -20,34 +20,43 @@ class CreateProduct extends React.Component {
 
     handleChange(e){
         const { name, value } = e.target;
-        let errors = this.state.errors;
+        // let errors = this.state.errors;
+        let imgErr = [];
+        let nameErr = [];
         let file = '';
+        let fileSizeMb = '';
         if( e.target.files ){
             file =  e.target.files[0];
+            fileSizeMb = file.size/1024/1024;
         }
         const fileType = file['type'];
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/jpg'];
-        // console.log(errors.name);
         switch (name) {
             case 'name':
-                errors.name =
-                    value.length <= 0
-                        ? 'Tên sản phẩm không được để trống'
-                        : '';
+                if(value.length <= 0){
+                    nameErr.push('Tên sản phẩm không được để trống')
+                }
                 break;
             case 'image':
                 //e.target.files[0].name
-                errors.image =
-                    !validImageTypes.includes(fileType)
-                        ? 'Ảnh phải là định dạng jpeg, png, jpg, gif, svg'
-                        : '';
+                if(!validImageTypes.includes(fileType))
+                {
+                    imgErr.push('Ảnh phải là định dạng jpeg, png, jpg, gif, svg');
+                }
+                if(fileSizeMb > 2)
+                {
+                    imgErr.push('Kích thước file phải nhỏ hơn 2MB')
+                }
                 break;
             default:
                 break;
         }
         this.setState({
             [name] : value,
-            // errors: errors
+            errors: {
+                image : imgErr,
+                name : nameErr
+            }
         });
     }
 
@@ -62,21 +71,22 @@ class CreateProduct extends React.Component {
             formData.append('quantity',"0");
         }
         if(e.target.image.files.length > 0){
-            formData.append('photo',e.target.image.files[0]);
+            formData.append('image',e.target.image.files[0]);
         }
         callApi('product','POST',formData)
             .then( (res) => {
-                this.props.history.push('/')
             })
             .catch( (errs) => {
                 let json = errs.response.data.error;
                 this.setState({
                     errors: {
                         name : json.name,
-                        image : json.photo
+                        image : json.image
                     }
                 });
             })
+        this.props.history.push('/')
+
     }
 
     render() {

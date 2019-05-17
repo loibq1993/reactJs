@@ -34,6 +34,20 @@ const productsReducer = (state = [], action) => {
     }
 };
 
+const productError =(state = [], action) => {
+    switch (action.type) {
+        case types.UPDATE_DATA_FAILED:
+            return state = action.errors;
+        case types.CREATE_DATA_FAILED:
+            return state = action.errors;
+        case types.GET_DATA_FAILED:
+            return state = action.errors;
+        default:
+            return state;
+    }
+};
+
  export default combineReducers({
      products : productsReducer,
+     errors : productError
  });

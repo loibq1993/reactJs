@@ -1,4 +1,4 @@
-import { React,bs } from '../../import';
+import { React } from '../../import';
 import * as action from "../../actions/action.js";
 import {connect} from 'react-redux';
 
@@ -14,9 +14,9 @@ class EditProduct extends React.Component {
             quantity:'',
             previewUrl : '',
             previewFileName : '',
-            errors: {
-                name: '',
-                image: ''
+            errors : {
+                image : "",
+                name : ""
             }
         };
         this.handleChange = this.handleChange.bind(this);
@@ -33,58 +33,69 @@ class EditProduct extends React.Component {
 
     componentWillReceiveProps(nextProps, nextContext) {
         if(nextProps && nextProps.product){
-            var {product} = nextProps;
+            let {product, errors} = nextProps;
+            let errImg = '';
+            let errName = '';
+            if(nextProps.errors.length !==0){
+                if(errors.image){
+                    errImg  = errors.image;
+                }
+                if(errors.name){
+                    errName = errors.name;
+                }
+            }
             this.setState({
                 name: product.name,
-                image: product.photo,
+                image: product.image,
                 description: product.description,
-                quantity : product.quantity
+                quantity : product.quantity,
+                errors :{
+                    image : errImg,
+                    name : errName
+                }
             })
         }
     }
 
     handleChange(e){
         const { name, value } = e.target;
-        let reader = new FileReader();
-        let errorName = "";
-        let errorImg = "";
-        // let previewFileName = "";
+        // let errors = this.state.errors;
+        let imgErr = [];
+        let nameErr = [];
         let file = '';
+        let fileSizeMb = '';
         if( e.target.files ){
             file =  e.target.files[0];
-            reader.onloadend = () => {
-                this.setState({
-                    previewUrl : reader.result,
-                    previewFileName : file.name
-                });
-            }
-            reader.readAsDataURL(file)
+            fileSizeMb = file.size/1024/1024;
         }
         const fileType = file['type'];
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/jpg'];
         switch (name) {
             case 'name':
-                errorName =
-                    value.length <= 0
-                        ? 'Tên sản phẩm không được để trống'
-                        : '';
+                if(value.length <= 0){
+                    nameErr.push('Tên sản phẩm không được để trống')
+                }
                 break;
             case 'image':
                 //e.target.files[0].name
-                errorImg =
-                    !validImageTypes.includes(fileType)
-                        ? 'Ảnh phải là định dạng jpeg, png, jpg, gif, svg'
-                        : '';
+                if(!validImageTypes.includes(fileType))
+                {
+                    imgErr.push('Ảnh phải là định dạng jpeg, png, jpg, gif, svg');
+                }
+                if(fileSizeMb > 2)
+                {
+                    imgErr.push('Kích thước file phải nhỏ hơn 2MB')
+                }
                 break;
             default:
                 break;
         }
         this.setState({
-            errors : {
-                name : errorName,
-                image : errorImg
-            },
             [name] : value,
+            errors: {
+                image : imgErr,
+                name : nameErr
+            }
         });
     }
 
@@ -94,38 +105,27 @@ class EditProduct extends React.Component {
         var formData = new FormData();
         let id = match.params.id;
         formData.append('name',this.state.name);
-        formData.append('description',this.state.description);
+        if(this.state.description){
+            formData.append('description',this.state.description);
+        }else{
+            formData.append('description','');
+        }
         if(this.state.quantity!== ""){
             formData.append('quantity',this.state.quantity);
         }else{
             formData.append('quantity',"0");
         }
         if(e.target.image.files.length > 0){
-            formData.append('photo',e.target.image.files[0]);
+            formData.append('image',e.target.image.files[0]);
         }
         formData.append('id',id);
         formData.append('_method','PATCH');
-
-        this.props.onEditData(formData,id);
-        this.props.history.push('/product/'+id+'/edit');
-        // callApi('product/'+id,'POST',formData)
-        //     .then( (res) => {
-        //         this.props.history.push('/')
-        //     })
-        //     .catch( (errs) => {
-        //         let json = errs.response.data.error;
-        //         this.setState({
-        //             errors: {
-        //                 name : json.name,
-        //                 image : json.photo
-        //             }
-        //         });
-        //     })
+        this.props.onUpdateData(formData,id);
+        // console.log(this.props);
     }
 
     render() {
-        let { name, image, description, quantity } = this.state;
-        let errors = this.state.errors;
+        let { name, image, description, quantity, errors } = this.state;
         let previewUrl = this.state.previewUrl;
         let previewFileName = this.state.previewFileName;
         return (
@@ -147,11 +147,15 @@ class EditProduct extends React.Component {
                                                 type="text"
                                                 name="name"
                                                 placeholder="Product name"
-                                                value={name}
+                                                value={name ? name : ''}
                                                 onChange={this.handleChange}
                                                 className="form-control"
                                             />
-                                            {<span className='error'>{errors.name}</span>}
+                                            {errors.name
+                                                ? errors.name.map((name, key) => {
+                                                     return <span className='error' key={key}>{name}</span>
+                                                })
+                                                : ''}
                                         </div>
                                         <div className="form-group row">
                                             <label className="col-md-12">Product image</label>
@@ -172,9 +176,12 @@ class EditProduct extends React.Component {
                                                 name="image"
                                                 onChange={this.handleChange}
                                                 className="col-md-6"
-
                                             />
-                                            {<span className='col-md-12 error'>{errors.image}</span>}
+                                            {errors.image
+                                                ? errors.image.map( (item, key) => {
+                                                        return <span className="col-md-12 error" key={key}>{item}</span>;
+                                                    })
+                                                : ''}
                                         </div>
                                         <div className="form-group">
                                             <label>Product Description</label>
@@ -183,7 +190,7 @@ class EditProduct extends React.Component {
                                                 name="description"
                                                 placeholder="Product description"
                                                 onChange={this.handleChange}
-                                                value={description}
+                                                value={description ? description : ''}
                                             />
                                         </div>
                                         <div className="form-group">
@@ -213,7 +220,8 @@ class EditProduct extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        product :state.products
+        product :state.products,
+        errors :state.errors
     }
 };
 
@@ -222,9 +230,9 @@ const mapDispatchToProps = (dispatch, props) => {
         fetchProduct : (id) => {
             dispatch(action.actRequestEditData(id));
         },
-        onEditData : (formData,id) => {
+        onUpdateData : (formData,id) => {
             dispatch(action.actRequestUpdateData(formData,id))
-        }
+        },
     }
 };
 

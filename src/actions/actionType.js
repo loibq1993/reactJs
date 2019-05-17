@@ -4,3 +4,6 @@ export const ADD_DATA = 'ADD_DATA';
 export const EDIT_DATA = 'EDIT_DATA';
 export const DELETE_DATA = 'DELETE_DATA';
 export const UPDATE_DATA = 'UPDATE_DATA';
+export const UPDATE_DATA_FAILED = 'UPDATE_DATA_FAILED';
+export const CREATE_DATA_FAILED = 'CREATE_DATA_FAILED';
+export const GET_DATA_FAILED = 'GET_DATA_FAILED';
