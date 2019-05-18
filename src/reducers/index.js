@@ -19,8 +19,8 @@ const productsReducer = (state = [], action) => {
             return state = action.products;
         // case types.GET_ONE_DATA:
         //     return action.product;
-        // case types.ADD_DATA:
-        //     return [...state, action.payload];
+        case types.CREATE_DATA:
+            return state = action.product;
         case types.EDIT_DATA:
             return state = action.product;
         case types.UPDATE_DATA:
@@ -47,7 +47,7 @@ const productError =(state = [], action) => {
     }
 };
 
- export default combineReducers({
-     products : productsReducer,
-     errors : productError
- });
+export default combineReducers({
+    products : productsReducer,
+    errors : productError,
+});

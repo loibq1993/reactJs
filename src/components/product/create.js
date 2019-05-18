@@ -1,5 +1,6 @@
 import {React,bs} from '../../import'
-import callApi from '../../callApi';
+import * as action from "../../actions/action";
+import {connect} from "react-redux";
 
 class CreateProduct extends React.Component {
     constructor(props){
@@ -9,6 +10,8 @@ class CreateProduct extends React.Component {
             image:'',
             description:'',
             quantity:'',
+            previewUrl : '',
+            previewFileName : '',
             errors: {
                 name: '',
                 image: ''
@@ -18,9 +21,31 @@ class CreateProduct extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(nextProps && nextProps.errors){
+            let {errors} = nextProps;
+            let errImg = '';
+            let errName = '';
+            if(nextProps.errors.error.length !==0){
+                if(errors.error.image){
+                    errImg  = errors.error.image;
+                }
+                if(errors.error.name){
+                    errName = errors.error.name;
+                }
+            }
+            this.setState({
+                errors :{
+                    image : errImg,
+                    name : errName
+                }
+            })
+        }
+    }
+
     handleChange(e){
         const { name, value } = e.target;
-        // let errors = this.state.errors;
+        let reader = new FileReader();
         let imgErr = [];
         let nameErr = [];
         let file = '';
@@ -28,6 +53,13 @@ class CreateProduct extends React.Component {
         if( e.target.files ){
             file =  e.target.files[0];
             fileSizeMb = file.size/1024/1024;
+            reader.onloadend = () => {
+                this.setState({
+                    previewUrl : reader.result,
+                    previewFileName : file.name
+                });
+            }
+            reader.readAsDataURL(file)
         }
         const fileType = file['type'];
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/jpg'];
@@ -38,7 +70,6 @@ class CreateProduct extends React.Component {
                 }
                 break;
             case 'image':
-                //e.target.files[0].name
                 if(!validImageTypes.includes(fileType))
                 {
                     imgErr.push('Ảnh phải là định dạng jpeg, png, jpg, gif, svg');
@@ -73,24 +104,13 @@ class CreateProduct extends React.Component {
         if(e.target.image.files.length > 0){
             formData.append('image',e.target.image.files[0]);
         }
-        callApi('product','POST',formData)
-            .then( (res) => {
-            })
-            .catch( (errs) => {
-                let json = errs.response.data.error;
-                this.setState({
-                    errors: {
-                        name : json.name,
-                        image : json.image
-                    }
-                });
-            })
-        this.props.history.push('/')
-
+        this.props.onCreateData(formData);
     }
 
     render() {
-        let errors = this.state.errors;
+        let { image,errors } = this.state;
+        let previewUrl = this.state.previewUrl;
+        let previewFileName = this.state.previewFileName;
         return (
             <main className="py-4">
                 <div className="container">
@@ -109,18 +129,38 @@ class CreateProduct extends React.Component {
                                                 value={this.state.value}
                                                 onChange={this.handleChange}
                                             />
-                                            {<span className='error'>{errors.name}</span>}
+                                            {errors.name
+                                                ? errors.name.map((name, key) => {
+                                                    return <span className='error' key={key}>{name}</span>
+                                                })
+                                                : ''}
                                         </bs.Form.Group>
-                                        <bs.Form.Group>
-                                            <bs.FormLabel>Product image</bs.FormLabel>
-                                            <bs.FormControl
+                                        <div className="form-group row">
+                                            <label className="col-md-12">Product image</label>
+                                            <span className="col-md-6">
+                                                {previewUrl !== ''
+                                                    ? <img height="100" width="100" src={previewUrl} alt={image} />
+                                                    : <img height="100" width="100" alt="" />
+                                                }
+                                                <p>
+                                                    {previewUrl !== ''
+                                                        ? previewFileName
+                                                        : ''
+                                                    }
+                                                </p>
+                                            </span>
+                                            <input
                                                 type="file"
                                                 name="image"
-                                                value={this.state.value}
                                                 onChange={this.handleChange}
+                                                className="col-md-6"
                                             />
-                                            {<span className='error'>{errors.image}</span>}
-                                        </bs.Form.Group>
+                                            {errors.image
+                                                ? errors.image.map( (item, key) => {
+                                                    return <span className="col-md-12 error" key={key}>{item}</span>;
+                                                })
+                                                : ''}
+                                        </div>
                                         <bs.Form.Group>
                                             <bs.FormLabel>Product Name</bs.FormLabel>
                                             <bs.FormControl
@@ -156,4 +196,19 @@ class CreateProduct extends React.Component {
     }
 }
 
-export default CreateProduct;
+const mapStateToProps = state => {
+    return {
+        errors : state.errors,
+    }
+};
+
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        onCreateData : (formData) => {
+            dispatch(action.actRequestCreateData(formData))
+        },
+    }
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(CreateProduct)
+

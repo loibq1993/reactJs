@@ -1,7 +1,7 @@
 import { React } from '../../import';
 import * as action from "../../actions/action.js";
 import {connect} from 'react-redux';
-
+import history from '../../history'
 const baseUrl = 'http://laravel.cc';
 
 class EditProduct extends React.Component {
@@ -21,6 +21,7 @@ class EditProduct extends React.Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleBack = this.handleBack.bind(this);
     }
 
     componentDidMount() {
@@ -57,9 +58,13 @@ class EditProduct extends React.Component {
         }
     }
 
+    handleBack(){
+        // this.props.history.push('/');
+    }
+
     handleChange(e){
         const { name, value } = e.target;
-        // let errors = this.state.errors;
+        let reader = new FileReader();
         let imgErr = [];
         let nameErr = [];
         let file = '';
@@ -67,6 +72,13 @@ class EditProduct extends React.Component {
         if( e.target.files ){
             file =  e.target.files[0];
             fileSizeMb = file.size/1024/1024;
+            reader.onloadend = () => {
+                this.setState({
+                    previewUrl : reader.result,
+                    previewFileName : file.name
+                });
+            }
+            reader.readAsDataURL(file)
         }
         const fileType = file['type'];
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/jpg'];
@@ -121,6 +133,7 @@ class EditProduct extends React.Component {
         formData.append('id',id);
         formData.append('_method','PATCH');
         this.props.onUpdateData(formData,id);
+        history.goBack()
         // console.log(this.props);
     }
 
@@ -176,6 +189,7 @@ class EditProduct extends React.Component {
                                                 name="image"
                                                 onChange={this.handleChange}
                                                 className="col-md-6"
+
                                             />
                                             {errors.image
                                                 ? errors.image.map( (item, key) => {
@@ -206,6 +220,7 @@ class EditProduct extends React.Component {
                                         </div>
                                         <div className="form-group">
                                             <button type="submit" className="btn btn-primary">Save</button>
+                                            <button className="btn btn-warning" onClick={this.handleBack}>Back</button>
                                         </div>
                                     </form>
                                 </div>

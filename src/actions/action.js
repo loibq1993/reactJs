@@ -82,24 +82,33 @@ export const actUpdateFailed = (errors)=> {
         type : types.UPDATE_DATA_FAILED,
         errors,
     }
-}
+};
 
-export const actRequestAddData = () => {
+export const actRequestCreateData = (formData) => {
     return (dispatch) => {
-        return callApi('product','POST',null)
+        return callApi('product','POST',formData)
             .then((res) => {
-                dispatch(actAddData(res.data));
+                dispatch(actCreateData(res.data));
+            })
+            .catch( (errors) => {
+                dispatch(actCreateDataFailed(errors.response.data))
             });
     }
 };
 
-export const actAddData = (product) => {
+export const actCreateData = (product) => {
     return {
-        type : types.ADD_DATA,
+        type : types.CREATE_DATA,
         product
     }
 };
 
+export const actCreateDataFailed = (errors) => {
+    return {
+        type : types.CREATE_DATA_FAILED,
+        errors,
+    }
+};
 
 export const actFetchOneData = (product) => {
     return {
