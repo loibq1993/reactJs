@@ -1,5 +1,5 @@
 import { React } from '../../import';
-import * as action from "../../actions/action.js";
+import * as act from "../../actions/actionRequestProduct.js";
 import {connect} from 'react-redux';
 import history from '../../history'
 const baseUrl = 'http://laravel.cc';
@@ -243,10 +243,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchProduct : (id) => {
-            dispatch(action.actRequestEditData(id));
+            dispatch(act.actRequestEditData(id));
         },
         onUpdateData : (formData,id) => {
-            dispatch(action.actRequestUpdateData(formData,id))
+            dispatch(act.actRequestUpdateData(formData,id))
         },
     }
 };

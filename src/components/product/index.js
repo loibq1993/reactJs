@@ -1,5 +1,5 @@
 import { React, rt, bs, FontAwesomeIcon} from '../../import'
-import * as action from "../../actions/action.js";
+import * as act from "../../actions/actionRequestProduct.js";
 import {connect} from 'react-redux';
 
 const baseUrl = 'http://laravel.cc';
@@ -95,10 +95,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchAllProducts : () => {
-            dispatch(action.actRequestFetchData());
+            dispatch(act.actRequestFetchData());
         },
         onDeleteData : (id) => {
-            dispatch(action.actRequestDeleteData(id));
+            dispatch(act.actRequestDeleteData(id));
         }
     }
 };

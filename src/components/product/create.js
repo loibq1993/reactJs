@@ -1,6 +1,6 @@
 import {React,bs} from '../../import'
-import * as action from "../../actions/action";
 import {connect} from "react-redux";
+import * as act from '../../actions/actionRequestProduct';
 
 class CreateProduct extends React.Component {
     constructor(props){
@@ -205,7 +205,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, props) => {
     return {
         onCreateData : (formData) => {
-            dispatch(action.actRequestCreateData(formData))
+            dispatch(act.actRequestCreateData(formData))
         },
     }
 };
