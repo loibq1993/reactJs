@@ -1,5 +1,6 @@
 import callApi from "../callApi";
 import * as act from "./actionCreators";
+import history from '../history.js'
 
 export const actRequestFetchData = () => {
     return (dispatch) => {
@@ -42,6 +43,7 @@ export const actRequestUpdateData = (formData,id) => {
         return callApi('product/'+id,'POST',formData)
             .then((res) => {
                 dispatch(act.actUpdateData(res.data));
+                history.push('/');
             })
             .catch((errors) => {
                 dispatch(act.actUpdateFailed(errors.response.data.error))

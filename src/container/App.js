@@ -23,10 +23,10 @@ class App extends React.Component {
                 </header>
                 <div className="main-route-place">
                     <rt.Switch>
+                        <rt.Route exact path="/" component={IndexProduct} />
                         <rt.Route path="/login" component={Login} />
                         <rt.Route path="/register" component={Register} />
                         <rt.Route path="/reset-password" component={ResetPassword} />
-                        <rt.Route exact path="/" component={IndexProduct} />
                         <rt.Route path="/product/create" component={CreateProduct} />
                         <rt.Route path="/product/:id/edit" component={EditProduct} />
                         <rt.Route path="/product/:id" component={ViewProduct} main/>

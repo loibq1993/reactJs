@@ -28,7 +28,7 @@ class IndexProduct extends React.Component {
     };
 
     render() {
-        let products = this.props.products;
+        let {products} = this.props;
         var _this = this;
         return (
             <main className="py-4">
