@@ -56,7 +56,19 @@ export const actFetchOneData = (product) => {
     }
 };
 
+export const actLogin = (user) => {
+    return {
+        type: types.LOGIN,
+        user
+    }
+};
 
+export const actLoginFailed = (errors) => {
+    return {
+        type: types.LOGIN_FAILED,
+        errors
+    }
+};
 
 
 

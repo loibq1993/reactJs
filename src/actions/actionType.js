@@ -10,6 +10,5 @@ export const CREATE_DATA_FAILED = 'CREATE_DATA_FAILED';
 export const GET_DATA_FAILED = 'GET_DATA_FAILED';
 
 //Authentication action type
-export const UPDATE_STATUS_FAILED = 'UPDATE_STATUS_FAILED';
-export const CREATE_STATUS_FAILED = 'CREATE_STATUS_FAILED';
-export const GET_STATUS_FAILED = 'GET_STATUS_FAILED';
+export const LOGIN = 'LOGIN';
+export const LOGIN_FAILED = 'LOGIN_FAILED';
