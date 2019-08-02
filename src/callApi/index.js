@@ -1,13 +1,15 @@
 import {axios} from '../import';
-const url = 'http://laravel.cc';
+import {baseUrl} from '../import/const';
 
-export default function index(endpoint, method, body) {
+export default function callApi(endpoint, method, body = null) {
     return axios({
-        url: url + '/' + endpoint,
+        url: baseUrl + '/' + endpoint,
         timeout: 20000,
         method: method,
-        data: body
-    }).catch( (error) => {
-        console.log(error);
+        data: body,
+        responseType: 'json',
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
     })
 }

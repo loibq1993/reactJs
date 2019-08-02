@@ -1,4 +1,6 @@
 import {React,bs} from '../../import'
+import {connect} from "react-redux";
+import * as act from '../../actions/actionRequestProduct';
 
 class CreateProduct extends React.Component {
     constructor(props){
@@ -8,16 +10,107 @@ class CreateProduct extends React.Component {
             image:'',
             description:'',
             quantity:'',
+            previewUrl : '',
+            previewFileName : '',
+            errors: {
+                name: '',
+                image: ''
+            },
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(nextProps && nextProps.errors){
+            let {errors} = nextProps;
+            let errImg = '';
+            let errName = '';
+            if(nextProps.errors.error.length !==0){
+                if(errors.error.image){
+                    errImg  = errors.error.image;
+                }
+                if(errors.error.name){
+                    errName = errors.error.name;
+                }
+            }
+            this.setState({
+                errors :{
+                    image : errImg,
+                    name : errName
+                }
+            })
+        }
+    }
+
     handleChange(e){
+        const { name, value } = e.target;
+        let reader = new FileReader();
+        let imgErr = [];
+        let nameErr = [];
+        let file = '';
+        let fileSizeMb = '';
+        if( e.target.files ){
+            file =  e.target.files[0];
+            fileSizeMb = file.size/1024/1024;
+            reader.onloadend = () => {
+                this.setState({
+                    previewUrl : reader.result,
+                    previewFileName : file.name
+                });
+            }
+            reader.readAsDataURL(file)
+        }
+        const fileType = file['type'];
+        const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/jpg'];
+        switch (name) {
+            case 'name':
+                if(value.length <= 0){
+                    nameErr.push('Tên sản phẩm không được để trống')
+                }
+                break;
+            case 'image':
+                if(!validImageTypes.includes(fileType))
+                {
+                    imgErr.push('Ảnh phải là định dạng jpeg, png, jpg, gif, svg');
+                }
+                if(fileSizeMb > 2)
+                {
+                    imgErr.push('Kích thước file phải nhỏ hơn 2MB')
+                }
+                break;
+            default:
+                break;
+        }
         this.setState({
-            [e.target.name]: e.target.value
+            [name] : value,
+            errors: {
+                image : imgErr,
+                name : nameErr
+            }
         });
-        console.log(this.state)
     }
+
+    handleSubmit(e){
+        e.preventDefault();
+        var formData = new FormData();
+        formData.append('name',this.state.name);
+        formData.append('description',this.state.description);
+        if(this.state.quantity!== ""){
+            formData.append('quantity',this.state.quantity);
+        }else{
+            formData.append('quantity',"0");
+        }
+        if(e.target.image.files.length > 0){
+            formData.append('image',e.target.image.files[0]);
+        }
+        this.props.onCreateData(formData);
+    }
+
     render() {
+        let { image,errors } = this.state;
+        let previewUrl = this.state.previewUrl;
+        let previewFileName = this.state.previewFileName;
         return (
             <main className="py-4">
                 <div className="container">
@@ -26,7 +119,7 @@ class CreateProduct extends React.Component {
                             <div className="card">
                                 <div className="card-header">Create new product</div>
                                 <div className="card-body">
-                                    <bs.Form method="post" encType="multipart/form-data">
+                                    <bs.Form id="form-create"  encType="multipart/form-data" onSubmit={this.handleSubmit}>
                                         <bs.Form.Group>
                                             <bs.FormLabel>Product Name</bs.FormLabel>
                                             <bs.FormControl
@@ -36,16 +129,38 @@ class CreateProduct extends React.Component {
                                                 value={this.state.value}
                                                 onChange={this.handleChange}
                                             />
+                                            {errors.name
+                                                ? errors.name.map((name, key) => {
+                                                    return <span className='error' key={key}>{name}</span>
+                                                })
+                                                : ''}
                                         </bs.Form.Group>
-                                        <bs.Form.Group>
-                                            <bs.FormLabel>Product image</bs.FormLabel>
-                                            <bs.FormControl
+                                        <div className="form-group row">
+                                            <label className="col-md-12">Product image</label>
+                                            <span className="col-md-6">
+                                                {previewUrl !== ''
+                                                    ? <img height="100" width="100" src={previewUrl} alt={image} />
+                                                    : <img height="100" width="100" alt="" />
+                                                }
+                                                <p>
+                                                    {previewUrl !== ''
+                                                        ? previewFileName
+                                                        : ''
+                                                    }
+                                                </p>
+                                            </span>
+                                            <input
                                                 type="file"
                                                 name="image"
-                                                value={this.state.value}
                                                 onChange={this.handleChange}
+                                                className="col-md-6"
                                             />
-                                        </bs.Form.Group>
+                                            {errors.image
+                                                ? errors.image.map( (item, key) => {
+                                                    return <span className="col-md-12 error" key={key}>{item}</span>;
+                                                })
+                                                : ''}
+                                        </div>
                                         <bs.Form.Group>
                                             <bs.FormLabel>Product Name</bs.FormLabel>
                                             <bs.FormControl
@@ -64,10 +179,11 @@ class CreateProduct extends React.Component {
                                                 placeholder="Product quantity"
                                                 value={this.state.value}
                                                 onChange={this.handleChange}
+                                                defaultValue="0"
                                             />
                                         </bs.Form.Group>
                                         <bs.Form.Group>
-                                            <bs.FormControl type="submit" />
+                                            <bs.Button type="submit">Submit</bs.Button>
                                         </bs.Form.Group>
                                     </bs.Form>
                                 </div>
@@ -80,4 +196,19 @@ class CreateProduct extends React.Component {
     }
 }
 
-export default CreateProduct;
+const mapStateToProps = state => {
+    return {
+        errors : state.errors,
+    }
+};
+
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        onCreateData : (formData) => {
+            dispatch(act.actRequestCreateData(formData))
+        },
+    }
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(CreateProduct)
+

@@ -1,16 +1,53 @@
-import * as type from "../actions/actionType";
+import * as types from "../actions/actionType";
+import {combineReducers} from 'redux';
 
+const findIndex = (products, id) => {
+    var result = -1;
+    products.forEach((product, index) => {
+        if(product.id === id){
+            result = index;
+        }
+    });
+    return result;
+};
 
-const   products = (state = [], action) => {
+const productsReducer = (state = [], action) => {
+    var index = -1;
+    var {id} = action;
     switch (action.type) {
-        // case ADD_POST:
-        //     return [...state, action.payload];
-        // case DELETE_POST:
-        //     return state.filter(post => post._id !== action.payload.id);
-        case type.GET_DATA:
-            return action.products;
+        case types.GET_ALL_DATA:
+            return state = action.products;
+        // case types.GET_ONE_DATA:
+        //     return action.product;
+        case types.CREATE_DATA:
+            return state = action.product;
+        case types.EDIT_DATA:
+            return state = action.product;
+        case types.UPDATE_DATA:
+            return state = action.product;
+        case types.DELETE_DATA:
+            index = findIndex(state, id);
+            state.splice(index, 1);
+            return action.id;
         default:
             return state;
     }
-}
- export default products;
+};
+
+const productError =(state = [], action) => {
+    switch (action.type) {
+        case types.UPDATE_DATA_FAILED:
+            return state = action.errors;
+        case types.CREATE_DATA_FAILED:
+            return state = action.errors;
+        case types.GET_DATA_FAILED:
+            return state = action.errors;
+        default:
+            return state;
+    }
+};
+
+export default combineReducers({
+    products : productsReducer,
+    errors : productError,
+});

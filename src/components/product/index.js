@@ -1,71 +1,34 @@
 import { React, rt, bs, FontAwesomeIcon} from '../../import'
-import * as action from "../../actions/action.js";
+import * as act from "../../actions/actionRequestProduct.js";
 import {connect} from 'react-redux';
-import callApi from '../../callApi'
-
-const baseUrl = 'http://laravel.cc';
+import {baseUrl} from '../../import/const';
 
 class IndexProduct extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            products:[]
-        };
-
+            products : []
+        }
     }
+
     componentDidMount() {
-       callApi('product','GET',null)
-           .then( (res) => {
-               this.setState({products :res.data});
-               // this.props.fetchAllProducts(res.data);
-           })
-
+        this.props.fetchAllProducts();
     }
 
-    showProducts(){
-        // var {products} = this.props;
-        // console.log(products);
-        let listProducts = this.state.products.map(
-            (product,index) => {
-                return (
-                    <tr key={index}>
-                        <td>{index+1}</td>
-                        <td>{product.name}</td>
-                        <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
-                        <td>{product.description}</td>
-                        <td>{product.quantity}</td>
-                        <td>
-                            <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
-                            <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
-                            <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
-                        </td>
-                    </tr>
-                )
-            }
-        )
-        return listProducts;
+    handleEdit = (id) => {
+        this.props.history.push('/product/'+id+'/edit');
+    };
 
-        // if(products.length > 0){
-        //     products.map((product,index) => {
-        //         return (
-        //             <tr key={index}>
-        //                 <td>{index+1}</td>
-        //                 <td>{product.name}</td>
-        //                 <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>
-        //                 <td>{product.description}</td>
-        //                 <td>{product.quantity}</td>
-        //                 <td>
-        //                     <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
-        //                     <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>
-        //                     <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>
-        //                 </td>
-        //             </tr>
-        //         )
-        //     })
-        // }
-    }
+    handleDelete = (id) => {
+        if(confirm('Are you sure?')){//eslint-disable-line
+            this.props.onDeleteData(id);
+            this.props.history.push('/');
+        }
+    };
 
     render() {
+        let {products} = this.props;
+        var _this = this;
         return (
             <main className="py-4">
                 <div className="container">
@@ -86,24 +49,33 @@ class IndexProduct extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                            {this.showProducts()}
-                            {/*{this.state.products.map(function(product,index){*/}
-                            {/*        return (*/}
-                            {/*            <tr key={index}>*/}
-                            {/*                <td>{index+1}</td>*/}
-                            {/*                <td>{product.name}</td>*/}
-                            {/*                <td><img width="100" height="100" src={baseUrl + '/images/' + product.photo} alt={product.photo}/></td>*/}
-                            {/*                <td>{product.description}</td>*/}
-                            {/*                <td>{product.quantity}</td>*/}
-                            {/*                <td>*/}
-                            {/*                    <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>*/}
-                            {/*                    <rt.Link className="btn btn-warning" to={'/product/edit/'+product.id}>edit</rt.Link>*/}
-                            {/*                    <rt.Link className="btn btn-danger" to={'/product/delete/'+product.id}>Delete</rt.Link>*/}
-                            {/*                </td>*/}
-                            {/*            </tr>*/}
-                            {/*        )*/}
-                            {/*    }*/}
-                            {/*)}*/}
+                            {products.map(function(product,index){
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index+1}</td>
+                                            <td>{product.name}</td>
+                                            <td><img width="100" height="100" src={baseUrl + '/images/' + product.image} alt={product.image}/></td>
+                                            <td>{product.description}</td>
+                                            <td>{product.quantity}</td>
+                                            <td>
+                                                <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
+                                                <bs.Button
+                                                    onClick={_this.handleEdit.bind(this, product.id)} //error while using this. have to change to _this
+                                                    className="btn btn-warning"
+                                                >
+                                                    Edit
+                                                </bs.Button>
+                                                <bs.Button
+                                                    onClick={_this.handleDelete.bind(this, product.id)} //error while using this. have to change to _this
+                                                    className="btn btn-danger"
+                                                >
+                                                    Delete
+                                                </bs.Button>
+                                            </td>
+                                        </tr>
+                                    )
+                                }
+                            )}
                             </tbody>
                         </bs.Table>
                     </div>
@@ -111,7 +83,6 @@ class IndexProduct extends React.Component {
             </main>
         )
     }
-
 }
 
 const mapStateToProps = state => {
@@ -119,12 +90,18 @@ const mapStateToProps = state => {
         products :state.products
     }
 };
-const mapDispatchToProps = (dispatch) => {
+
+const mapDispatchToProps = (dispatch, props) => {
     return {
-        fetchAllProducts : (products) => {
-            dispatch(action.actFetchData(products));
+        fetchAllProducts : () => {
+            dispatch(act.actRequestFetchData());
         },
+        onDeleteData : (id) => {
+            dispatch(act.actRequestDeleteData(id));
+        }
     }
 };
+
+
 
 export default connect(mapStateToProps,mapDispatchToProps)(IndexProduct)
