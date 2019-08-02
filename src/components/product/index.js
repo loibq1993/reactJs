@@ -1,8 +1,7 @@
 import { React, rt, bs, FontAwesomeIcon} from '../../import'
 import * as act from "../../actions/actionRequestProduct.js";
 import {connect} from 'react-redux';
-
-const baseUrl = 'http://laravel.cc';
+import {baseUrl} from '../../import/const';
 
 class IndexProduct extends React.Component {
     constructor(props){

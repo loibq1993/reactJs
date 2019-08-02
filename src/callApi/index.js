@@ -1,10 +1,9 @@
 import {axios} from '../import';
-const url = 'http://laravel.cc/api';
-
+import {baseUrl} from '../import/const';
 
 export default function callApi(endpoint, method, body = null) {
     return axios({
-        url: url + '/' + endpoint,
+        url: baseUrl + '/' + endpoint,
         timeout: 20000,
         method: method,
         data: body,
