@@ -11,6 +11,12 @@ class IndexProduct extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            products: newProps.products
+        })
+    }
+
     componentDidMount() {
         this.props.fetchAllProducts();
     }
@@ -49,7 +55,7 @@ class IndexProduct extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                            {products.map(function(product,index){
+                            {this.state.products.map(function(product,index){
                                     return (
                                         <tr key={index}>
                                             <td>{index+1}</td>
