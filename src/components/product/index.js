@@ -22,7 +22,7 @@ class IndexProduct extends React.Component {
     }
 
     handleEdit = (id) => {
-        this.props.history.push('/product/'+id+'/edit');
+        this.props.history.push('product/'+'edit/'+id);
     };
 
     handleDelete = (id) => {
@@ -64,15 +64,15 @@ class IndexProduct extends React.Component {
                                             <td>{product.description}</td>
                                             <td>{product.quantity}</td>
                                             <td>
-                                                <rt.Link className="btn btn-primary" to={'/product/'+product.id}>View</rt.Link>
+                                                {/* <rt.Link className="btn btn-primary" to={'/product/'+product._id}>View</rt.Link> */}
                                                 <bs.Button
-                                                    onClick={_this.handleEdit.bind(this, product.id)} //error while using this. have to change to _this
+                                                    onClick={_this.handleEdit.bind(this, product._id)} //error while using this. have to change to _this
                                                     className="btn btn-warning"
                                                 >
                                                     Edit
                                                 </bs.Button>
                                                 <bs.Button
-                                                    onClick={_this.handleDelete.bind(this, product.id)} //error while using this. have to change to _this
+                                                    onClick={_this.handleDelete.bind(this, product._id)} //error while using this. have to change to _this
                                                     className="btn btn-danger"
                                                 >
                                                     Delete

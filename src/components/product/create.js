@@ -105,6 +105,7 @@ class CreateProduct extends React.Component {
             formData.append('image',e.target.image.files[0]);
         }
         this.props.onCreateData(formData);
+        
     }
 
     render() {

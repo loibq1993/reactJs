@@ -59,7 +59,7 @@ class EditProduct extends React.Component {
     }
 
     handleBack(){
-        // this.props.history.push('/');
+        this.props.history.push('/');
     }
 
     handleChange(e){
@@ -134,7 +134,6 @@ class EditProduct extends React.Component {
         formData.append('_method','PATCH');
         this.props.onUpdateData(formData,id);
         history.goBack()
-        // console.log(this.props);
     }
 
     render() {

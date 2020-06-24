@@ -9,7 +9,8 @@ export const actRequestFetchData = () => {
             dispatch(act.actFetchAllData(res.data));
         }
         catch (error) {
-            dispatch(act.actFetchAllData(error.response.data.errors));
+            console.log(error);
+            // dispatch(act.actFetchAllData(error.response.data.errors));
         }
     }
 };
@@ -17,10 +18,11 @@ export const actRequestFetchData = () => {
 export const actRequestDeleteData = (id) => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product/' + id, 'DELETE', null);
+            const res = await callApi('product/delete/' + id, 'DELETE', null);
             dispatch(act.actDeleteData(res.data));
         }
         catch (error) {
+            console.log(error);
             dispatch(act.actDeleteData(error.response.data.errors));
         }
     }
@@ -29,10 +31,11 @@ export const actRequestDeleteData = (id) => {
 export const actRequestEditData = (id) => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product/' + id + '/edit', 'GET', null);
+            const res = await callApi('product/'+ 'edit/' + id , 'GET', null);
             dispatch(act.actEditData(res.data));
         }
         catch (error) {
+            console.log(error)
             dispatch(act.actEditData(error.response.data.errors));
         }
     }
@@ -41,12 +44,13 @@ export const actRequestEditData = (id) => {
 export const actRequestUpdateData = (formData,id) => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product/' + id, 'POST', formData);
-            dispatch(act.actUpdateData(res.data));
-            history.push('/');
+            const res = await callApi('product/update/' + id, 'PUT', formData);
+            dispatch(act.actFetchAllData(res.data));
+            history.push('/')
         }
         catch (errors) {
-            dispatch(act.actUpdateFailed(errors.response.data.error));
+            console.log(errors);
+            // dispatch(act.actUpdateFailed(errors.response.data.error));
         }
     }
 };
@@ -54,11 +58,10 @@ export const actRequestUpdateData = (formData,id) => {
 export const actRequestCreateData = (formData) => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product', 'POST', formData);
+            const res = await callApi('product/create', 'POST', formData);
             dispatch(act.actCreateData(res.data));
         }
         catch (errors) {
-            console.log(errors.response);
             dispatch(act.actCreateDataFailed(errors.response.data));
         }
     }
