@@ -12,10 +12,7 @@ class CreateProduct extends React.Component {
             quantity:'',
             previewUrl : '',
             previewFileName : '',
-            errors: {
-                name: '',
-                image: ''
-            },
+            errors: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,22 +20,18 @@ class CreateProduct extends React.Component {
 
     componentWillReceiveProps(nextProps, nextContext) {
         if(nextProps && nextProps.errors){
-            let {errors} = nextProps;
-            let errImg = '';
-            let errName = '';
-            if(nextProps.errors.error.length !==0){
-                if(errors.error.image){
-                    errImg  = errors.error.image;
+            let errors = nextProps.errors.message.errors;
+            let err = [];
+            if(Object.keys(errors).length !==0){
+                if(errors.image){
+                    err['image']  = errors.image;
                 }
-                if(errors.error.name){
-                    errName = errors.error.name;
+                if(errors.name){
+                    err['name'] = errors.name;
                 }
             }
             this.setState({
-                errors :{
-                    image : errImg,
-                    name : errName
-                }
+                errors : err
             })
         }
     }
@@ -46,13 +39,9 @@ class CreateProduct extends React.Component {
     handleChange(e){
         const { name, value } = e.target;
         let reader = new FileReader();
-        let imgErr = [];
-        let nameErr = [];
         let file = '';
-        let fileSizeMb = '';
         if( e.target.files ){
             file =  e.target.files[0];
-            fileSizeMb = file.size/1024/1024;
             reader.onloadend = () => {
                 this.setState({
                     previewUrl : reader.result,
@@ -61,33 +50,8 @@ class CreateProduct extends React.Component {
             }
             reader.readAsDataURL(file)
         }
-        const fileType = file['type'];
-        const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/jpg'];
-        switch (name) {
-            case 'name':
-                if(value.length <= 0){
-                    nameErr.push('Tên sản phẩm không được để trống')
-                }
-                break;
-            case 'image':
-                if(!validImageTypes.includes(fileType))
-                {
-                    imgErr.push('Ảnh phải là định dạng jpeg, png, jpg, gif, svg');
-                }
-                if(fileSizeMb > 2)
-                {
-                    imgErr.push('Kích thước file phải nhỏ hơn 2MB')
-                }
-                break;
-            default:
-                break;
-        }
         this.setState({
             [name] : value,
-            errors: {
-                image : imgErr,
-                name : nameErr
-            }
         });
     }
 
@@ -105,13 +69,14 @@ class CreateProduct extends React.Component {
             formData.append('image',e.target.image.files[0]);
         }
         this.props.onCreateData(formData);
-        
+        this.props.history.push('/');
     }
 
     render() {
         let { image,errors } = this.state;
         let previewUrl = this.state.previewUrl;
         let previewFileName = this.state.previewFileName;
+        let divError = (data) => <span className="col-md-12 error">{data}</span>
         return (
             <main className="py-4">
                 <div className="container">
@@ -130,10 +95,8 @@ class CreateProduct extends React.Component {
                                                 value={this.state.value}
                                                 onChange={this.handleChange}
                                             />
-                                            {errors.name
-                                                ? errors.name.map((name, key) => {
-                                                    return <span className='error' key={key}>{name}</span>
-                                                })
+                                            {errors && errors.name
+                                                ? divError(errors.name.properties.message)
                                                 : ''}
                                         </bs.Form.Group>
                                         <div className="form-group row">
@@ -157,9 +120,7 @@ class CreateProduct extends React.Component {
                                                 className="col-md-6"
                                             />
                                             {errors.image
-                                                ? errors.image.map( (item, key) => {
-                                                    return <span className="col-md-12 error" key={key}>{item}</span>;
-                                                })
+                                                ? divError(errors.image.properties.message)
                                                 : ''}
                                         </div>
                                         <bs.Form.Group>

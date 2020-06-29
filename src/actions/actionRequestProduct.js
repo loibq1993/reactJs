@@ -31,7 +31,7 @@ export const actRequestDeleteData = (id) => {
 export const actRequestEditData = (id) => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product/'+ 'edit/' + id , 'GET', null);
+            const res = await callApi('product/edit/' + id , 'GET', null);
             dispatch(act.actEditData(res.data));
         }
         catch (error) {
@@ -59,7 +59,8 @@ export const actRequestCreateData = (formData) => {
     return async (dispatch) => {
         try {
             const res = await callApi('product/create', 'POST', formData);
-            dispatch(act.actCreateData(res.data));
+            dispatch(act.actFetchAllData(res.data));
+            history.push('/')
         }
         catch (errors) {
             dispatch(act.actCreateDataFailed(errors.response.data));

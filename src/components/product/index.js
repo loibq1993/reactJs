@@ -22,7 +22,7 @@ class IndexProduct extends React.Component {
     }
 
     handleEdit = (id) => {
-        this.props.history.push('product/'+'edit/'+id);
+        this.props.history.push('product/edit/'+id);
     };
 
     handleDelete = (id) => {
