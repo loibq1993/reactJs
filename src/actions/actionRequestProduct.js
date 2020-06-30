@@ -63,6 +63,7 @@ export const actRequestCreateData = (formData) => {
             history.push('/')
         }
         catch (errors) {
+            console.log(errors);
             dispatch(act.actCreateDataFailed(errors.response.data));
         }
     }

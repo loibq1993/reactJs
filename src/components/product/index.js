@@ -60,7 +60,7 @@ class IndexProduct extends React.Component {
                                         <tr key={index}>
                                             <td>{index+1}</td>
                                             <td>{product.name}</td>
-                                            <td><img width="100" height="100" src={baseUrl + '/images/' + product.image} alt={product.image}/></td>
+                                            <td><img width="100" height="100" src={baseUrl + 'public/images/' + product.image} alt={product.image}/></td>
                                             <td>{product.description}</td>
                                             <td>{product.quantity}</td>
                                             <td>
