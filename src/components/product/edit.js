@@ -2,7 +2,7 @@ import { React } from '../../import';
 import * as act from "../../actions/actionRequestProduct.js";
 import {connect} from 'react-redux';
 import history from '../../history';
-import {baseUrl} from '../../import/const';
+import {baseUrl, baseS3} from '../../import/const';
 
 class EditProduct extends React.Component {
     constructor(props){
@@ -174,7 +174,7 @@ class EditProduct extends React.Component {
                                             <span className="col-md-6">
                                                 {previewUrl !== ''
                                                     ? <img height="100" width="100" src={previewUrl} alt={image} />
-                                                    : <img height="100" width="100" src={baseUrl + '/images/' + image} alt={image} />
+                                                    : <img height="100" width="100" src={baseS3 + '/' + image} alt={image} />
                                                 }
                                                 <p>
                                                     {previewUrl !== ''

@@ -1,7 +1,7 @@
 import { React, rt, bs, FontAwesomeIcon} from '../../import'
 import * as act from "../../actions/actionRequestProduct.js";
 import {connect} from 'react-redux';
-import {baseUrl} from '../../import/const';
+import {baseS3} from '../../import/const';
 
 class IndexProduct extends React.Component {
     constructor(props){
@@ -60,7 +60,7 @@ class IndexProduct extends React.Component {
                                         <tr key={index}>
                                             <td>{index+1}</td>
                                             <td>{product.name}</td>
-                                            <td><img width="100" height="100" src={baseUrl + 'public/images/' + product.image} alt={product.image}/></td>
+                                            <td><img width="100" height="100" src={baseS3 + '/' + product.image} alt={product.image}/></td>
                                             <td>{product.description}</td>
                                             <td>{product.quantity}</td>
                                             <td>
