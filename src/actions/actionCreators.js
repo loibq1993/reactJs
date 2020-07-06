@@ -70,7 +70,12 @@ export const actLoginFailed = (errors) => {
     }
 };
 
-
+export const actCreateUser = (user) => {
+    return {
+        type : types.CREATE_DATA,
+        user
+    }
+};
 
 
 

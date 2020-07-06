@@ -2,7 +2,7 @@ import { React } from '../../import';
 import * as act from "../../actions/actionRequestProduct.js";
 import {connect} from 'react-redux';
 import history from '../../history';
-import {baseUrl, baseS3} from '../../import/const';
+import {baseS3} from '../../import/const';
 
 class EditProduct extends React.Component {
     constructor(props){

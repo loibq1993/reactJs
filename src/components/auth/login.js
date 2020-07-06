@@ -32,7 +32,6 @@ class Login extends React.Component {
 
     handleChange(e){
         const { name,value } = e.target;
-        console.log(name);
         let emailErr = [];
         if(name === 'email'){
             if (value === '') {
@@ -52,9 +51,8 @@ class Login extends React.Component {
     handleSubmit(e){
         e.preventDefault();
         var formData = new FormData();
-        console.log(this.state);
         formData.append('email',this.state.email);
-        formData.append('password', this.state.password);
+        formData.append('hash_password', this.state.password);
         formData.append('remember',this.state.remember);
         this.props.onLogin(formData);
     }
