@@ -9,7 +9,6 @@ export const actRequestFetchData = () => {
             dispatch(act.actFetchAllData(res.data));
         }
         catch (error) {
-            console.log(error);
             // dispatch(act.actFetchAllData(error.response.data.errors));
         }
     }
@@ -22,7 +21,6 @@ export const actRequestDeleteData = (id) => {
             dispatch(act.actDeleteData(res.data));
         }
         catch (error) {
-            console.log(error);
             dispatch(act.actDeleteData(error.response.data.errors));
         }
     }
@@ -35,7 +33,6 @@ export const actRequestEditData = (id) => {
             dispatch(act.actEditData(res.data));
         }
         catch (error) {
-            console.log(error)
             dispatch(act.actEditData(error.response.data.errors));
         }
     }
@@ -49,7 +46,6 @@ export const actRequestUpdateData = (formData,id) => {
             history.push('/')
         }
         catch (errors) {
-            console.log(errors);
             // dispatch(act.actUpdateFailed(errors.response.data.error));
         }
     }
@@ -59,10 +55,10 @@ export const actRequestCreateData = (formData) => {
     return async (dispatch) => {
         try {
             const res = await callApi('user/create', 'POST', formData);
-            dispatch(act.actFetchAllData(res.data));
+            localStorage.setItem("token", res.data.token);
+            dispatch(act.actFetchAllData(res.data.user));
         }
         catch (errors) {
-            console.log(errors);
             // dispatch(act.actCreateDataFailed(errors.response.data));
         }
     }

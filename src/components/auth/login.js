@@ -1,6 +1,8 @@
 import {React, bs} from '../../import'
 import * as act from "../../actions/actionAuth";
 import {connect} from "react-redux";
+const createHistory = require("history").createBrowserHistory;
+const history = createHistory();
 
 class Login extends React.Component {
     constructor(props){
@@ -12,9 +14,14 @@ class Login extends React.Component {
             emailErr: ''
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleOnClick = this.handleOnClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-
+    componentWillMount(){
+        if (localStorage.getItem('token')) {
+            this.props.history.push('/')
+        }
+    }
     componentWillReceiveProps(nextProps, nextContext) {
         if(nextProps && nextProps.error){
             let {error} = nextProps;
@@ -26,7 +33,7 @@ class Login extends React.Component {
 
     validateEmail(email) {
         //eslint-disable-next-line
-        let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return regex.test(String(email).toLowerCase());
     }
 
@@ -48,13 +55,23 @@ class Login extends React.Component {
         });
     }
 
-    handleSubmit(e){
+    handleOnClick(e){
         e.preventDefault();
-        var formData = new FormData();
-        formData.append('email',this.state.email);
-        formData.append('hash_password', this.state.password);
-        formData.append('remember',this.state.remember);
-        this.props.onLogin(formData);
+        this.handleSubmit();
+    }
+
+    handleSubmit(e){
+        try {
+
+            var formData = new FormData();
+            formData.append('email',this.state.email);
+            formData.append('hash_password', this.state.password);
+            formData.append('remember',this.state.remember);
+            this.props.onLogin(formData);
+            history.push("/");
+        } catch (e) {
+            alert(e.message);
+        }
     }
 
     render() {
@@ -102,9 +119,7 @@ class Login extends React.Component {
                                             />
                                         </bs.FormGroup>
                                         <bs.FormGroup className="row justify-content-center">
-                                            <bs.Button className="btn btn-primary" type="submit">Submit</bs.Button>
-                                            <bs.Nav.Link to="/reset-password" className="btn btn-link">Reset password</bs.Nav.Link>
-                                            {/*<rt.Route exact path="/reset-password" component={ResetPassword} />*/}
+                                            <bs.Button className="btn btn-primary" onClick={this.handleOnClick}>Submit</bs.Button>
                                         </bs.FormGroup>
                                     </bs.Form>
                                 </div>

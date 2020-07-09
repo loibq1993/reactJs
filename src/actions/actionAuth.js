@@ -5,13 +5,11 @@ export const actRequestLogin = (formData) => {
     return async (dispatch) => {
         try {
             const res = await callApi('user/login', 'POST', formData);
-            // console.log(res.data.access_token);
-            // localStorage.setItem("access_token", res.data.access_token);
-            console.log(res);
-            dispatch(act.actLogin(res.data));
+            localStorage.setItem("token", res.data.token);
+            dispatch(act.actLogin(res.data.user));
         }
         catch (errors) {
-            console.log(errors)
+            localStorage.removeItem("token");
             // dispatch(act.actLoginFailed(errors.data));
         }
     }

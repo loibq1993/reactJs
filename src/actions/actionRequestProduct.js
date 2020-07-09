@@ -1,15 +1,19 @@
 import callApi from "../callApi";
 import * as act from "./actionCreators";
 import history from '../history.js';
+const token = localStorage.getItem('token')
 
 export const actRequestFetchData = () => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product', 'GET', null);
-            dispatch(act.actFetchAllData(res.data));
+            if (token) {
+                const res = await callApi('product', 'GET', null);
+                dispatch(act.actFetchAllData(res.data));
+            } else {
+                localStorage.removeItem("token")
+            }
         }
         catch (error) {
-            console.log(error);
             // dispatch(act.actFetchAllData(error.response.data.errors));
         }
     }
@@ -18,11 +22,10 @@ export const actRequestFetchData = () => {
 export const actRequestDeleteData = (id) => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product/delete/' + id, 'DELETE', null);
+            const res = await callApi('product/delete/' + id, 'DELETE', null, token);
             dispatch(act.actDeleteData(res.data));
         }
         catch (error) {
-            console.log(error);
             dispatch(act.actDeleteData(error.response.data.errors));
         }
     }
@@ -31,11 +34,10 @@ export const actRequestDeleteData = (id) => {
 export const actRequestEditData = (id) => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product/edit/' + id , 'GET', null);
+            const res = await callApi('product/edit/' + id , 'GET', null, token);
             dispatch(act.actEditData(res.data));
         }
         catch (error) {
-            console.log(error)
             dispatch(act.actEditData(error.response.data.errors));
         }
     }
@@ -44,12 +46,11 @@ export const actRequestEditData = (id) => {
 export const actRequestUpdateData = (formData,id) => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product/update/' + id, 'PUT', formData);
+            const res = await callApi('product/update/' + id, 'PUT', formData, token);
             dispatch(act.actFetchAllData(res.data));
             history.push('/')
         }
         catch (errors) {
-            console.log(errors);
             // dispatch(act.actUpdateFailed(errors.response.data.error));
         }
     }
@@ -58,12 +59,11 @@ export const actRequestUpdateData = (formData,id) => {
 export const actRequestCreateData = (formData) => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product/create', 'POST', formData);
+            const res = await callApi('product/create', 'POST', formData, token);
             dispatch(act.actFetchAllData(res.data));
             history.push('/')
         }
         catch (errors) {
-            console.log(errors);
             dispatch(act.actCreateDataFailed(errors.response.data));
         }
     }

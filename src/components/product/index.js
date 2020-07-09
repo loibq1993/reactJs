@@ -10,7 +10,11 @@ class IndexProduct extends React.Component {
             products : []
         }
     }
-
+    componentWillMount(){
+        if (!localStorage.getItem('token')) {
+           this.props.history.push('/login')
+        }
+    }
     componentWillReceiveProps(newProps) {
         this.setState({
             products: newProps.products

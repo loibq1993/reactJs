@@ -1,6 +1,8 @@
 import { React, bs} from '../../import'
 import {connect} from "react-redux";
 import * as act from '../../actions/actionRequestUser';
+const createHistory = require("history").createBrowserHistory;
+const history = createHistory();
 
 class Register extends React.Component {
     constructor(props){
@@ -17,7 +19,11 @@ class Register extends React.Component {
         this.handleOnClick = this.handleOnClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-
+    componentWillMount(){
+        if (localStorage.getItem('token')) {
+            this.props.history.push('/')
+        }
+    }
     componentWillReceiveProps(nextProps, nextContext) {
         if(nextProps && nextProps.errors){
             let {errors} = nextProps;
@@ -133,14 +139,16 @@ class Register extends React.Component {
 
     handleSubmit () {
         const {errors} = this.state;
-        if (!errors.status) {
+        try {
             var formData = new FormData();
             formData.append('username',this.state.name);
             formData.append('email',this.state.email);
             formData.append('hash_password',this.state.hash_password);
             formData.append('role_id', this.state.role_id)
             this.props.onCreateData(formData);
-            // this.props.history.push('/');
+            history.push('/');
+        } catch(e) {
+
         }
     }
 

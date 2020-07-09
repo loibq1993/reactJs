@@ -23,7 +23,11 @@ class EditProduct extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleBack = this.handleBack.bind(this);
     }
-
+    componentWillMount(){
+        if (!localStorage.getItem('token') && !localStorage.getItem('user')) {
+            this.props.history.push('/login')
+        }
+    }
     componentDidMount() {
         let {match} = this.props;
         if(match){
@@ -132,6 +136,7 @@ class EditProduct extends React.Component {
         }
         formData.append('id',id);
         formData.append('_method','PATCH');
+        formData.append('token', localStorage.getItem('token'));
         this.props.onUpdateData(formData,id);
         history.goBack()
     }

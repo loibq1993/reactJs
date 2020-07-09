@@ -1,7 +1,7 @@
 import {axios} from '../import';
 import {baseUrl} from '../import/const';
 
-export default function callApi(endpoint, method, body = null) {
+export default function callApi(endpoint, method, body = null, token = null) {
     return axios({
         url: baseUrl + '/' + endpoint,
         timeout: 20000,
@@ -10,6 +10,8 @@ export default function callApi(endpoint, method, body = null) {
         responseType: 'json',
         headers: {
             'Content-Type': 'multipart/form-data',
+            Accept: 'application/json',
+            'Authorization': `Bearer ${token}`
         },
     })
 }

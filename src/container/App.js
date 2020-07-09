@@ -10,14 +10,16 @@ import ViewProduct from '../components/product/view.js';
 
 class App extends React.Component {
     render() {
+        const isLoggedIn = localStorage.getItem('token');
         return (
             <rt.BrowserRouter>
                 <header className="header">
                     <bs.Navbar bg="dark" variant="dark">
                         <bs.Nav className="mr-auto">
-                            <rt.Link to="/" className="nav-link">Home</rt.Link>
-                            <rt.Link to="/login" className="nav-link">Login</rt.Link>
-                            <rt.Link to="/register" className="nav-link">Register</rt.Link>
+                            {isLoggedIn 
+                            ? <rt.Link to="/" className="nav-link">Home</rt.Link>
+                            :<rt.Link to="/login" className="nav-link">Login</rt.Link> &&
+                            <rt.Link to="/register" className="nav-link">Register</rt.Link>}
                         </bs.Nav>
                     </bs.Navbar>
                 </header>

@@ -17,7 +17,11 @@ class CreateProduct extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-
+    componentWillMount(){
+        if (!localStorage.getItem('token') && !localStorage.getItem('user')) {
+            this.props.history.push('/login')
+        }
+    }
     componentWillReceiveProps(nextProps, nextContext) {
         if(nextProps && nextProps.errors){
             let errors = nextProps.errors.message.errors;
@@ -68,6 +72,7 @@ class CreateProduct extends React.Component {
         if(e.target.image.files.length > 0){
             formData.append('image',e.target.image.files[0]);
         }
+        formData.append('token', localStorage.getItem('token'));
         this.props.onCreateData(formData);
         this.props.history.push('/');
     }
