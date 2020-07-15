@@ -1,5 +1,6 @@
 import callApi from "../callApi";
 import * as act from "./actionCreators";
+import history from '../history.js';
 
 export const actRequestLogin = (formData) => {
     return async (dispatch) => {
@@ -10,7 +11,7 @@ export const actRequestLogin = (formData) => {
         }
         catch (errors) {
             localStorage.removeItem("token");
-            // dispatch(act.actLoginFailed(errors.data));
+            dispatch(act.actLoginFailed(errors.data));
         }
     }
 };

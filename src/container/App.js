@@ -7,8 +7,13 @@ import IndexProduct from '../components/product/index.js';
 import CreateProduct from '../components/product/create.js';
 import EditProduct from '../components/product/edit.js';
 import ViewProduct from '../components/product/view.js';
+import { Redirect } from 'react-router';
 
 class App extends React.Component {
+    handleOnClick (e) {
+        e.preventDefault();
+        localStorage.removeItem("token");
+    }
     render() {
         const isLoggedIn = localStorage.getItem('token');
         return (
@@ -16,10 +21,16 @@ class App extends React.Component {
                 <header className="header">
                     <bs.Navbar bg="dark" variant="dark">
                         <bs.Nav className="mr-auto">
-                            {isLoggedIn 
-                            ? <rt.Link to="/" className="nav-link">Home</rt.Link>
-                            :<rt.Link to="/login" className="nav-link">Login</rt.Link> &&
-                            <rt.Link to="/register" className="nav-link">Register</rt.Link>}
+                            {isLoggedIn ?
+                                <React.Fragment>
+                                    <rt.Link to="/" className="nav-link">Home</rt.Link>
+                                    <rt.Link to="" onClick={this.handleOnClick} className="nav-link">Logout</rt.Link>
+                                </React.Fragment>
+                            : 
+                                <React.Fragment>
+                                    <rt.Link to="/login" className="nav-link">Login</rt.Link>
+                                    <rt.Link to="/register" className="nav-link">Register</rt.Link>
+                                </React.Fragment>}
                         </bs.Nav>
                     </bs.Navbar>
                 </header>

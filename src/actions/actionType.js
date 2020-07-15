@@ -8,6 +8,7 @@ export const UPDATE_DATA = 'UPDATE_DATA';
 export const UPDATE_DATA_FAILED = 'UPDATE_DATA_FAILED';
 export const CREATE_DATA_FAILED = 'CREATE_DATA_FAILED';
 export const GET_DATA_FAILED = 'GET_DATA_FAILED';
+export const CREATE_DATA_VIEW = 'CREATE_DATA_VIEW'
 
 //Authentication action type
 export const LOGIN = 'LOGIN';

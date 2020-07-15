@@ -29,6 +29,8 @@ const productsReducer = (state = [], action) => {
             index = findIndex(state, id);
             state.splice(index, 1);
             return action.id;
+        case types.CREATE_DATA_VIEW:
+            return state = action.product
         default:
             return state;
     }

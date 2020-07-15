@@ -15,8 +15,8 @@ class EditProduct extends React.Component {
             previewUrl : '',
             previewFileName : '',
             errors : {
-                image : "",
-                name : ""
+                // image : "",
+                // name : ""
             }
         };
         this.handleChange = this.handleChange.bind(this);

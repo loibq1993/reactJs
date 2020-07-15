@@ -42,6 +42,13 @@ export const actCreateData = (product) => {
     }
 };
 
+export const actCreateView = (product) => {
+    return {
+        type: types.CREATE_DATA_VIEW,
+        product
+    }
+}
+
 export const actCreateDataFailed = (errors) => {
     return {
         type : types.CREATE_DATA_FAILED,

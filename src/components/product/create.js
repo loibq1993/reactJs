@@ -174,6 +174,9 @@ const mapDispatchToProps = (dispatch, props) => {
         onCreateData : (formData) => {
             dispatch(act.actRequestCreateData(formData))
         },
+        onViewData: () => {
+            dispatch(act.actRequestCreateView());
+        }
     }
 };
 

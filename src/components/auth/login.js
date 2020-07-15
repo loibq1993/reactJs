@@ -1,8 +1,7 @@
 import {React, bs} from '../../import'
 import * as act from "../../actions/actionAuth";
 import {connect} from "react-redux";
-const createHistory = require("history").createBrowserHistory;
-const history = createHistory();
+import { Redirect } from 'react-router';
 
 class Login extends React.Component {
     constructor(props){
@@ -18,9 +17,7 @@ class Login extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     componentWillMount(){
-        if (localStorage.getItem('token')) {
-            this.props.history.push('/')
-        }
+    
     }
     componentWillReceiveProps(nextProps, nextContext) {
         if(nextProps && nextProps.error){
@@ -62,19 +59,21 @@ class Login extends React.Component {
 
     handleSubmit(e){
         try {
-
             var formData = new FormData();
             formData.append('email',this.state.email);
             formData.append('hash_password', this.state.password);
             formData.append('remember',this.state.remember);
             this.props.onLogin(formData);
-            history.push("/");
+            this.props.history.push('/')
         } catch (e) {
             alert(e.message);
         }
     }
 
     render() {
+        if (localStorage.getItem('token')) {
+            return    <Redirect push to="/"/>;
+        }
         let {emailErr} = this.state;
         return (
             <main className="py-4">

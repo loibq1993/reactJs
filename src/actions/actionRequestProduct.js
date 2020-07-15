@@ -7,7 +7,7 @@ export const actRequestFetchData = () => {
     return async (dispatch) => {
         try {
             if (token) {
-                const res = await callApi('product', 'GET', null);
+                const res = await callApi('product', 'GET', null, token);
                 dispatch(act.actFetchAllData(res.data));
             } else {
                 localStorage.removeItem("token")
@@ -38,7 +38,7 @@ export const actRequestEditData = (id) => {
             dispatch(act.actEditData(res.data));
         }
         catch (error) {
-            dispatch(act.actEditData(error.response.data.errors));
+            act.actEditData(error.response.data)
         }
     }
 };
@@ -59,12 +59,24 @@ export const actRequestUpdateData = (formData,id) => {
 export const actRequestCreateData = (formData) => {
     return async (dispatch) => {
         try {
-            const res = await callApi('product/create', 'POST', formData, token);
+            const res = await callApi('product/store', 'POST', formData, token);
             dispatch(act.actFetchAllData(res.data));
             history.push('/')
         }
         catch (errors) {
             dispatch(act.actCreateDataFailed(errors.response.data));
+        }
+    }
+};
+export const actRequestCreateView = () => {
+    return async (dispatch) => {
+        try {
+            const res = await callApi('product/create' , 'GET', null, token);
+            console.log(res);
+            dispatch(act.actCreateView(res.data));
+        }
+        catch (error) {
+            dispatch(act.actCreateView(error.response.data.errors));
         }
     }
 };
